@@ -6,8 +6,6 @@
 
 A browser-based G-code parser and interactive layer viewer that extracts layer data from G-code files and provides a cumulative 2D visualisation of the model geometry. Built entirely with **vanilla HTML, CSS, and JavaScript** — no external libraries.
 
-**Live Demo:** [ https://lalit-7.github.io/G-Code-Parsing-Layer-Visualisation-/ ]
-
 ## How to Run
 
 Simply open `index.html` in any modern web browser. The sample `cone.gcode` file is loaded automatically. You can also drag-and-drop or upload your own G-code file.
