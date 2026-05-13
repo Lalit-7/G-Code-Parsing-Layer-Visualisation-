@@ -10,6 +10,8 @@ A browser-based G-code parser and interactive layer viewer that extracts layer d
 
 Simply open `index.html` in any modern web browser. The sample `cone.gcode` file is loaded automatically. You can also drag-and-drop or upload your own G-code file.
 
+**🔗 Live Demo:** [https://lalit-7.github.io/G-Code-Parsing-Layer-Visualisation-/](https://lalit-7.github.io/G-Code-Parsing-Layer-Visualisation-/)
+
 **Note:** If opening directly as a file (file:// protocol), some browsers may block the automatic loading of `cone.gcode` due to CORS restrictions. In that case, you can:
 1. Use a simple local server: `python -m http.server 8000` and open `http://localhost:8000`
 2. Or manually upload the `cone.gcode` file using the upload area
