@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LayerView — G-Code Layer Visualiser</title>
+  <meta name="description" content="Interactive G-code layer viewer with cumulative 2D visualisation for 3D printing data." />
+
+  <!-- Fonts (matching Task 1 design system) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Grid Background -->
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="orb orb-cyan" aria-hidden="true"></div>
+  <div class="orb orb-purple" aria-hidden="true"></div>
+
+  <main class="app">
+
+    <!-- Header -->
+    <header class="app-header">
+      <div class="logo">
+        <span class="logo-icon">◎</span>
+        <span class="logo-text">LayerView</span>
+      </div>
+      <p class="subtitle">G-Code Parsing &amp; Layer Visualisation</p>
+    </header>
+
+    <div class="glow-line" aria-hidden="true"></div>
+
+    <!-- File Upload Section -->
+    <section class="upload-section">
+      <div class="upload-area" id="upload-area">
+        <div class="upload-icon">📂</div>
+        <p class="upload-text">Drop a G-code file here or <label for="file-input" class="upload-link">browse</label></p>
+        <p class="upload-hint">Sample cone.gcode is loaded by default</p>
+        <input type="file" id="file-input" accept=".gcode,.gco,.g,.txt,.nc" hidden />
+      </div>
+    </section>
+
+    <!-- Data Summary -->
+    <section class="summary-section" id="summary-section">
+      <div class="summary-card">
+        <span class="summary-value" id="total-layers">—</span>
+        <span class="summary-label">Total Layers</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-value" id="z-range">—</span>
+        <span class="summary-label">Z Range (mm)</span>
+      </div>
+      <div class="summary-card">
+        <span class="summary-value" id="total-points">—</span>
+        <span class="summary-label">Total Points</span>
+      </div>
+    </section>
+
+    <!-- Canvas + Controls Layout -->
+    <section class="viewer-section">
+
+      <!-- Canvas Container -->
+      <div class="canvas-container">
+        <canvas id="layer-canvas" width="500" height="500"></canvas>
+        <!-- Canvas overlay info -->
+        <div class="canvas-overlay" id="canvas-overlay">
+          <span class="overlay-tag">LAYER <span id="overlay-layer">0</span></span>
+        </div>
+      </div>
+
+      <!-- Controls Panel -->
+      <div class="controls-panel">
+
+        <!-- Layer Info -->
+        <div class="layer-info">
+          <div class="info-row">
+            <span class="info-key">Current Layer</span>
+            <span class="info-val" id="current-layer-num">0</span>
+          </div>
+          <div class="info-row">
+            <span class="info-key">Z Height</span>
+            <span class="info-val" id="current-z-height">— mm</span>
+          </div>
+          <div class="info-row">
+            <span class="info-key">Points in Layer</span>
+            <span class="info-val" id="current-points">—</span>
+          </div>
+        </div>
+
+        <!-- Slider -->
+        <div class="slider-section">
+          <label for="layer-slider" class="slider-label">Navigate Layers</label>
+          <input type="range" id="layer-slider" min="0" max="0" value="0" class="layer-slider" />
+          <div class="slider-range">
+            <span>0</span>
+            <span id="slider-max">0</span>
+          </div>
+        </div>
+
+        <!-- Navigation Buttons -->
+        <div class="nav-buttons">
+          <button id="btn-prev" class="nav-btn" title="Previous Layer">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"></polyline></svg>
+            Prev
+          </button>
+          <button id="btn-play" class="nav-btn play-btn" title="Auto Play">
+            <svg id="play-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21"></polygon></svg>
+            <svg id="pause-icon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="display:none"><rect x="6" y="4" width="4" height="16"></rect><rect x="14" y="4" width="4" height="16"></rect></svg>
+            Play
+          </button>
+          <button id="btn-next" class="nav-btn" title="Next Layer">
+            Next
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+        </div>
+
+        <!-- Speed Control -->
+        <div class="speed-section">
+          <span class="speed-label">Animation Speed</span>
+          <div class="speed-buttons">
+            <button id="btn-slower" class="speed-btn">Slower</button>
+            <span class="speed-value" id="speed-value">500ms</span>
+            <button id="btn-faster" class="speed-btn">Faster</button>
+          </div>
+        </div>
+
+        <!-- Z Heights Table -->
+        <div class="heights-section">
+          <details class="heights-details">
+            <summary class="heights-summary">All Z Heights</summary>
+            <div class="heights-list" id="heights-list"></div>
+          </details>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Color Legend -->
+    <section class="legend-section" id="legend-section">
+      <span class="legend-label">Height Scale</span>
+      <div class="legend-bar"></div>
+      <div class="legend-range">
+        <span id="legend-min">0 mm</span>
+        <span id="legend-max">0 mm</span>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>Built by Lalit</p>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
