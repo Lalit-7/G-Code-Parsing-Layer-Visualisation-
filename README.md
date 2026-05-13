@@ -2,7 +2,7 @@
 
 ## Overview
 
-![Layer Viewer Screenshot]( Layer Viewer Screenshot.png )
+![Layer Viewer Screenshot].(Layer Viewer Screenshot.png)
 
 A browser-based G-code parser and interactive layer viewer that extracts layer data from G-code files and provides a cumulative 2D visualisation of the model geometry. Built entirely with **vanilla HTML, CSS, and JavaScript** — no external libraries.
 
