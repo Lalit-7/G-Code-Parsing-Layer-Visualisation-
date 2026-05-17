@@ -1,4 +1,4 @@
-# Task 2 — G-Code Parsing & Layer Visualisation
+# G-Code Parsing & Layer Visualisation
 
 ## Overview
 
